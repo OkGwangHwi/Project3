@@ -53,7 +53,7 @@ MemberDAO dao = new MemberDAO(application);
 
 int affected = dao.joinMember(dto);
 if(affected == 1){
-	response.sendRedirect("/main/main.jsp");
+	response.sendRedirect("../main/main.jsp");
 }
 else{
 %>

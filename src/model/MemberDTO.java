@@ -77,10 +77,10 @@ public class MemberDTO {
 	객체 자체를 그대로 println()하는것이 가능하다.
 	 */
 	
-	/*@Override
+	@Override
 	public String toString() {
-		return String.format("아이디:%s, 비밀번호:%s, 이름:%s",id,pass,name);
-	}*/
+		return String.format("아이디:%s, 비밀번호:%s, 이름:%s",id,pass1,name);
+	}
 	
 }
 	
