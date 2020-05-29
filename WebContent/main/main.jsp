@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -23,38 +24,76 @@
 		<div class="main_contents">
 			<div class="main_con_left">
 				<p class="main_title" style="border:0px; margin-bottom:0px;"><img src="../images/main_title01.gif" alt="로그인 LOGIN" /></p>
-				<div class="login_box">
-					<table cellpadding="0" cellspacing="0" border="0">
-						<colgroup>
-							<col width="45px" />
-							<col width="120px" />
-							<col width="55px" />
-						</colgroup>
-						<tr>
-							<th><img src="../images/login_tit01.gif" alt="아이디" /></th>
-							<td><input type="text" name="" value="" class="login_input" /></td>
-							<td rowspan="2"><input type="image" src="../images/login_btn01.gif" alt="로그인" /></td>
-						</tr>
-						<tr>
-							<th><img src="../images/login_tit02.gif" alt="패스워드" /></th>
-							<td><input type="text" name="" value="" class="login_input" /></td>
-						</tr>
-					</table>
-					<p>
-						<input type="checkbox" name="" value="" /><img src="../images/login_tit03.gif" alt="저장" />
-						<a href="../member/id_pw.jsp"><img src="../images/login_btn02.gif" alt="아이디/패스워드찾기" /></a>
-						<a href="../member/join01.jsp"><img src="../images/login_btn03.gif" alt="회원가입" /></a>
-					</p>
-					 
-					<!-- 로그인 후 -->
-					<!-- <p style="padding:10px 0px 10px 10px"><span style="font-weight:bold; color:#333;">000님,</span> 반갑습니다.<br />로그인 하셨습니다.</p>
-					<p style="text-align:right; padding-right:10px;">
-						<a href=""><img src="../images/login_btn04.gif" /></a>
-						<a href=""><img src="../images/login_btn05.gif" /></a>
-					</p> -->
-			 
-				</div>
+<% 
+if(session.getAttribute("id")==null){
+%>
+<script>
+function check(frm){
+	
+	var id = document.getElementsByName("id");
+	if(id[0].value==""){
+		alert("아이디를 입력하세요");
+		id[0].focus();
+		return false;
+	}
+	
+	var pass = document.getElementsByName("pass");
+	if(pass[0].value==""){
+		alert("패스워드를 입력하세요");
+		pass[0].focus();
+		return false;
+	}
+}
+</script>
+	<div class="login_box">
+	<form action="../member/LoginProcess.jsp" name="idFrm" onsubmit="return check(this);">
+		<table cellpadding="0" cellspacing="0" border="0">
+			<colgroup>
+				<col width="45px" />
+				<col width="120px" />
+				<col width="55px" />
+			</colgroup>
+			<tr>
+				<th><img src="../images/login_tit01.gif" alt="아이디" /></th>
+				<td><input type="text" name="id" value="" class="login_input" /></td>
+				<td rowspan="2"><input type="image" src="../images/login_btn01.gif" /></td>
+			</tr>
+			<tr>
+				<th><img src="../images/login_tit02.gif" alt="패스워드" /></th>
+				<td><input type="text" name="pass" value="" class="login_input" /></td>
+			</tr>
+		</table>
+	</form>
+		<p>
+			<input type="checkbox" name="" value="" /><img src="../images/login_tit03.gif" alt="저장" />
+			<a href="../member/id_pw.jsp"><img src="../images/login_btn02.gif" alt="아이디/패스워드찾기" /></a>
+			<a href="../member/join01.jsp"><img src="../images/login_btn03.gif" alt="회원가입" /></a>
+		</p>
+		</div>
+<% }else{ %>
+		<!-- 로그인 후 -->
+		<div class="login_box">
+		<table cellpadding="0" cellspacing="0" border="0">
+			<colgroup>
+				<col width="45px" />
+				<col width="120px" />
+				<col width="55px" />
+			</colgroup>
+			<tr>
+				<p style="padding:10px 0px 10px 10px"><span style="font-weight:bold; color:#333;"><%=session.getAttribute("name") %>님,</span> 반갑습니다.<br />로그인 하셨습니다.</p>
+			</tr>
+			<tr>
+			<p style="text-align:right; padding-right:10px;">
+				<a href=""><img src="../images/login_btn04.gif" alt="회원정보수정"/></a>
+				<a href="../member/Logout.jsp"><img src="../images/login_btn05.gif" alt="로그아웃"/></a>
+			</p> 
+			</tr>
+		</table>
+		</div>
+<% } %>
+				
 			</div>
+			
 			<div class="main_con_center">
 				<p class="main_title"><img src="../images/main_title02.gif" alt="공지사항 NOTICE" /><a href="/space/sub01.jsp"><img src="../images/more.gif" alt="more" class="more_btn" /></a></p>
 				<ul class="main_board_list">

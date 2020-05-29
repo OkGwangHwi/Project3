@@ -1,6 +1,8 @@
+<%@page import="model.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../include/global_head.jsp" %>
+
 <body>
 <script src="../common/jquery/jquery-3.5.1.js"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -89,13 +91,72 @@
 				return false;
 			}
 			
-			var zip1 = document.getElementsByName("zip1");
+		var zip1 = document.getElementsByName("zip1");
 		if(zip1[0].value==""){
 			alert("주소를 입력하세요");
 			zip1[0].focus();
 			return false;
-		} 
+		}
+		
+		var deAddr = document.getElementsByName("detailAddress");
+		if(deAddr[0].value==""){
+			alert("상세주소를 입력하세요");
+			deAddr[0].focus();
+			return false;
+		}
+		
+		//HTML의 form name="joinFrm"
+
+		 //유효성체크하고 싶은 값의 id, name="pass1"
+
+		  var UserPassword = document.joinFrm.pass1;
+
+		  if(UserPassword.value.length<4 && UserPassword.value.length>12) {
+
+		    alert("비밀번호는 영문(대소문자구분),숫자,특수문자(~!@#$%^&*()-_? 만 허용)를 혼용하여 4~12자를 입력해주세요.");
+
+		    return false;
+		  }
+
+		  if(!UserPassword.value.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)) {
+
+		      alert("비밀번호는 영문(대소문자구분),숫자,특수문자(~!@#$%^&*()-_? 만 허용)를 혼용하여 4~12자를 입력해주세요.");
+
+		    return false;
+		  }
+		  return true;
+		  
+		  //아이디 유효성 검사
+		  var UserId = document.joinFrm.id;
+
+		  if(UserId.value.length<4 && UserId.value.length>12) {
+
+		    alert("비밀번호는 영문(대소문자구분),숫자,특수문자(~!@#$%^&*()-_? 만 허용)를 혼용하여 4~12자를 입력해주세요.");
+
+		    return false;
+		  }
+
+		  if(!UserId.value.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)) {
+
+		      alert("비밀번호는 영문(대소문자구분),숫자,특수문자(~!@#$%^&*()-_? 만 허용)를 혼용하여 4~12자를 입력해주세요.");
+
+		    return false;
+		  }
+		  return true;
 	}
+	
+	
+	function id_check_person(frm){
+		
+		var id = document.joinFrm.id.value;
+		 if(id.length<1 || id==null){
+		  alert("중복체크할 아이디를 입력하십시오");
+		  return false;
+		 }
+		 var url = "idCheck.jsp?id=" + id;
+		 window.open(url, "post", "height = 200, width = 600");
+	}
+	
 	
 	$(function(){
 		//이메일 select선택시 도메인 부분 채워주기
@@ -153,7 +214,7 @@
 	</tr>
 	<tr>
 		<th><img src="../images/join_tit002.gif" /></th>
-		<td><input type="text" name="id"  value="" class="join_input" />&nbsp;<a onclick="id_check_person();" style="cursor:hand;"><img src="../images/btn_idcheck.gif" alt="중복확인"/></a>&nbsp;&nbsp;<span>* 4자 이상 12자 이내의 영문/숫자 조합하여 공백 없이 기입</span></td>
+		<td><input type="text" name="id"  value="" class="join_input" />&nbsp;<img style="cursor:hand" src="../images/btn_idcheck.gif" onclick="id_check_person()" alt="중복확인"/>&nbsp;&nbsp;<span>* 4자 이상 12자 이내의 영문/숫자 조합하여 공백 없이 기입</span></td>
 </tr>
 <tr>
 	<th><img src="../images/join_tit003.gif" /></th>
@@ -200,11 +261,11 @@
 	<th><img src="../images/join_tit09.gif" /></th>
 	<td>
 <!-- 다음주소api -->						
-<input type="text" id="zip1" placeholder="우편번호">
-<input type="button" onclick="DaumPostcode()" value="우편번호 찾기"><br>
-<input type="text" id="address" placeholder="주소"><br>
-<input type="text" id="detailAddress" placeholder="상세주소">
-<input type="text" id="extraAddress" placeholder="참고항목">
+<input type="text" id="zip1" name="zip1" placeholder="우편번호" style="width:100px;height:20px;border:solid 1px #dadada; margin-top:2px; margin-bottom:2px;">
+<input type="button" onclick="DaumPostcode()" value="우편번호 찾기" style="width:100px;height:20px;border:solid 1px #dadada; margin-top:2px; margin-bottom:2px; cursor:hand;"><br>
+<input type="text" id="address" name="address" placeholder="주소" style="width:200px;height:20px;border:solid 1px #dadada; margin-top:2px; margin-bottom:2px;"><br>
+<input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소" style="width:200px;height:20px;border:solid 1px #dadada; margin-top:2px; margin-bottom:2px;">
+<input type="text" id="extraAddress" name="extraAddress" placeholder="참고항목" style="width:100px;height:20px;border:solid 1px #dadada; margin-top:2px; margin-bottom:2px;">
 </td>
 
 <script>
@@ -261,7 +322,7 @@ function DaumPostcode() {
 	</tr>
 </table>
 
-		<p style="text-align:center; margin-bottom:20px"><button type="submit"><img src="../images/btn01.gif" /></button>&nbsp;&nbsp;<a href="../main/main.jsp"><img src="../images/btn02.gif" /></a></p>
+		<p style="text-align:center; margin-bottom:20px"><input type="image" src="../images/btn01.gif"/>&nbsp;&nbsp;<a href="../main/main.jsp"><img src="../images/btn02.gif" /></a></p>
 		</form>
 	</div>
 </div>

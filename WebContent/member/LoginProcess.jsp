@@ -1,12 +1,12 @@
 <%@page import="java.util.Map"%>
 <%@page import="model.MemberDTO"%>
 <%@page import="model.MemberDAO"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%-- LoginProcess.jsp --%>
 <%
-String id = request.getParameter("user_id");
-String pw = request.getParameter("user_pw");
+String id = request.getParameter("id");
+String pw = request.getParameter("pass");
 
 //MariaDB정보로 변경되므로 초기화파라미터를 수정한다.
 String drv = application.getInitParameter("MariaJDBCDriver");
@@ -52,14 +52,23 @@ Map<String, String> memberInfo = dao.getMemberMap(id, pw);
 //Map의 id키값에 저장된 값이 있는지 확인
 if(memberInfo.get("id")!=null){
 	//저장된 값이 있다면...세션영역에 아이디, 패스워드, 이름을 속성으로 저장한다. 
-	session.setAttribute("USER_ID", memberInfo.get("id"));
-	session.setAttribute("USER_PW", memberInfo.get("pass"));
-	session.setAttribute("USER_NAME", memberInfo.get("name"));
-	
+	session.setAttribute("id", memberInfo.get("id"));
+	session.setAttribute("pass", memberInfo.get("pass"));
+	session.setAttribute("name", memberInfo.get("name"));
+%>
+<script>
+	alert("접속하셨습니다.");
+</script>
+<%
 	response.sendRedirect("../main/main.jsp");
 }
 else{
 	//저장된 값이 없다면...리퀘스트 영역에 오류메세지를 저장하고 포워드한다. 
+%>
+<script>
+	alert("접속실패하였습니다.");
+</script>
+<%
 	request.setAttribute("ERROR_MSG", "넌 회원이 아니시군-_-;");
 	request.getRequestDispatcher("login.jsp").forward(request,response);
 }

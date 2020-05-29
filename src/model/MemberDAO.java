@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 
@@ -51,39 +53,23 @@ public class MemberDAO {
 	}
 	
 	
-	//방법1 : 회원의 존재유무만 판단한다.
-	public boolean isMember(String id,String pass) {
-		String sql = "SELECT COUNT(*) FROM membership "
-				+ " WHERE id=? AND pass=?";
-		int isMember = 0;
-		boolean isFlag = false;
-		
-		try {
-			//prepare객체로 쿼리문 전송
-			psmt = con.prepareStatement(sql);
-			//인파라미터 설정
-			psmt.setString(1, id);
-			psmt.setString(2, pass);
-			//쿼리실행
-			rs = psmt.executeQuery();
-			//실행결과를 가져오기 위해 next() 호출
-			rs.next();
-			
-			isMember = rs.getInt(1);
-			System.out.println("affected:"+isMember);
-			if(isMember==0) {
-				isFlag = false;
-			}
-			else {
-				isFlag = true;
-			}
-		}
-		catch(Exception e) {
-			isFlag = false;
-			e.printStackTrace();
-		}
-		return isFlag;
-	}
+	//회원의 중복확인 판단한다.
+	public int idCheck(String id){
+		  int rst = 0;
+		  try {
+			   String sql = "select * from membership where id=?";
+			   psmt = con.prepareStatement(sql);
+			   psmt.setString(1, id);
+			   rs = psmt.executeQuery();
+			   if(rs.next()){
+			   rst = 1;
+			   }
+		  }
+		  catch(Exception e){
+		   e.printStackTrace();
+		  }
+		  return rst;
+		 }
 	
 	//방법2 : 회원인증후 MemberDTO객체로 회원정보를 반환한다. 
 	/*public MemberDTO getMemberDTO(String uid, String upass) {
@@ -169,7 +155,7 @@ public class MemberDAO {
 			  입력하는것보다 쿼리에서 제외시켜 주는것이 좋다.
 			 */
 			String query = "INSERT INTO membership ( "
-					+ " name,id,pass,tel,mob,email,zip) "
+					+ " name,id,pass,tel,mob,email,addr) "
 					+ " VALUES ( "
 					+ " ?, ?, ?, ?, ?, ?, ?)";
 			
@@ -180,7 +166,7 @@ public class MemberDAO {
 			psmt.setString(4, dto.getTel());
 			psmt.setString(5, dto.getMob());
 			psmt.setString(6, dto.getEmail());
-			psmt.setString(7, dto.getZip());
+			psmt.setString(7, dto.getAddr());
 			
 			affected = psmt.executeUpdate();
 		}
@@ -190,4 +176,55 @@ public class MemberDAO {
 		}
 		return affected;
 	}
+	
+	//아이디 찾기
+	/*public Map<String, String> idSearch(String name,String email){
+		Map<String, String> maps = new HashMap<String, String>();
+		
+		String sql = "SELECT name,email FROM membership "
+				+ " WHERE name=? AND email=?";
+		try {
+			//prepared 객체 생성
+			psmt = con.prepareStatement(sql);
+			//쿼리문의 인파라미터 설정
+			psmt.setString(1, name);
+			psmt.setString(2, email);
+			//오라클로 쿼리문 전송 및 결과셋(ResultSet) 반환받음
+			rs = psmt.executeQuery();
+			//오라클이 반환해준 ResultSet이 있는지 확인
+			if(rs.next()) {
+				//true를 반환했다면 결과셋 있음
+				//DTO객체에 회원 레코드의 값을 저장한다.
+				maps.put("name",rs.getString("name"));
+				maps.put("email",rs.getString("email"));
+			}
+			else {
+				//false를 반환했다면 결과셋 없음
+				System.out.println("결과셋이 없습니다.");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("idSearch오류");
+			e.printStackTrace();
+		}
+		//DTO객체를 반환한다.
+		return maps;
+	}*/
+	
+	public Set<String> idSearch(String email){
+		Set<String> set = new HashSet<String>();
+		  try {
+			   String sql = "select id from membership where email=?";
+			   psmt = con.prepareStatement(sql);
+			   psmt.setString(1, email);
+			   rs = psmt.executeQuery();
+			   if(rs.next()){
+				   set.add(rs.getString("id"));
+			   }
+		  }
+		  catch(Exception e){
+		   e.printStackTrace();
+		  }
+		  return set;
+		 }
 }

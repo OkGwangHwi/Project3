@@ -13,7 +13,7 @@ public class MemberDTO {
 	private String tel;
 	private String mob;
 	private String email;
-	private String zip;
+	private String addr;
 
 	public String getName() {
 		return name;
@@ -62,13 +62,13 @@ public class MemberDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public String getZip() {
-		return zip;
+	
+	public String getAddr() {
+		return addr;
 	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
+	
+	public void setAddr(String addr) {
+		this.addr = addr;
 	}
 
 	/*

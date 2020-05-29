@@ -2,10 +2,10 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%
-	session.removeAttribute("USER_ID");
-	session.removeAttribute("USER_PW");
+	session.removeAttribute("id");
+	session.removeAttribute("pass");
 
 	session.invalidate();
 	
-	response.sendRedirect("Login.jsp");
+	response.sendRedirect("login.jsp");
 %>

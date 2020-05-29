@@ -37,7 +37,11 @@ String mob = mob1+mob2+mob3;
 String email1 = request.getParameter("email1"); 
 String email2 = request.getParameter("email2");
 String email = email1+"@"+email2;
-String zip1 = request.getParameter("zip1"); 
+String zip1 = request.getParameter("zip1");
+String address = request.getParameter("address");
+String detailAddress = request.getParameter("detailAddress");
+String extraAddress = request.getParameter("extraAddress");
+String addr = zip1+" "+address+" "+detailAddress+" "+extraAddress;
 
 
 MemberDTO dto = new MemberDTO();
@@ -47,12 +51,17 @@ dto.setPass1(pass1);
 dto.setTel(tel);
 dto.setMob(mob);
 dto.setEmail(email);
-dto.setZip(zip1);
+dto.setAddr(addr);
 
 MemberDAO dao = new MemberDAO(application);
 
 int affected = dao.joinMember(dto);
 if(affected == 1){
+%>
+<script>
+	alert("회원가입 성공");
+</script>
+<%
 	response.sendRedirect("../main/main.jsp");
 }
 else{
