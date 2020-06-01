@@ -25,7 +25,7 @@ public class BbsDAO {
 	public BbsDAO(String driver,String url) {
 		try {
 		Class.forName(driver);
-		String id = "kosmo61_user";
+		String id = "suamil_user";
 		String pw = "1234";
 		con = DriverManager.getConnection(url,id,pw);
 		System.out.println("DB연결성공");
@@ -46,7 +46,7 @@ public class BbsDAO {
 	public BbsDAO(ServletContext ctx) {
 		try {
 			Class.forName(ctx.getInitParameter("MariaJDBCDriver"));
-			String id = "kosmo61_user";
+			String id = "suamil_user";
 			String pw = "1234";
 			con = DriverManager.getConnection(
 					ctx.getInitParameter("MariaConnectURL"),id,pw);
@@ -80,7 +80,7 @@ public class BbsDAO {
 		int totalCount = 0;
 		
 		//기본쿼리문(전체레코드를 대상으로 함)
-		String query = "SELECT COUNT(*) FROM board"
+		String query = "SELECT COUNT(*) FROM multi_board"
 				+ " WHERE bname='"+map.get("bname")+"'";
 		
 		//JSP페이지에서 검색어를 입력한 경우 where절이 동적으로 추가됨.
@@ -110,7 +110,7 @@ public class BbsDAO {
 		List<BbsDTO> bbs = new Vector<BbsDTO>();
 		
 		//기본쿼리문
-		String query = "SELECT * FROM board ";
+		String query = "SELECT * FROM multi_board ";
 		
 		//검색어가 있는경우 조건절 동적 추가
 		if(map.get("Word") != null) {
@@ -152,7 +152,7 @@ public class BbsDAO {
 		
 		List<BbsDTO> bbs = new Vector<BbsDTO>();
 		
-		String query = " SELECT * FROM board WHERE bname='"+map.get("bname")+"'";
+		String query = " SELECT * FROM multi_board WHERE bname='"+map.get("bname")+"'";
 		if(map.get("Word") != null) {
 			query +=" AND "+map.get("Column")+" "
 					+" LIKE '%"+map.get("Word")+"%' ";
@@ -207,7 +207,7 @@ public class BbsDAO {
 			  자동증가 컬럼으로 지정한다. 자동증가컬럼은 임의의 값을
 			  입력하는것보다 쿼리에서 제외시켜 주는것이 좋다.
 			 */
-			String query = "INSERT INTO board ( "
+			String query = "INSERT INTO multi_board ( "
 					+ " title,content,id,visitcount,bname) "
 					+ " VALUES ( "
 					+ " ?, ?, ?, 0, ?)";
@@ -229,7 +229,7 @@ public class BbsDAO {
 	
 	//일련번호 num에 해당하는 게시물의 조회수 증가
 	public void updateVisitCount(String num) {
-		String query = "UPDATE board SET "
+		String query = "UPDATE multi_board SET "
 				+ " visitcount=visitcount+1 "
 				+ " WHERE num=?";
 		System.out.println("조회수증가:"+query);
@@ -252,7 +252,7 @@ public class BbsDAO {
 		
 		//변경된쿼리문 : member테이블과 join하여 사용자 이름 가져옴.
 		String query = "SELECT B.*,M.name " +
-				" FROM member M INNER JOIN board B " + 
+				" FROM membership M INNER JOIN multi_board B " + 
 				"    ON M.id=B.id " + 
 				" WHERE num=?";
 		try {
@@ -281,7 +281,7 @@ public class BbsDAO {
 	public int updateEdit(BbsDTO dto) {
 		int affected = 0;
 		try {
-			String query = "UPDATE board SET "
+			String query = "UPDATE multi_board SET "
 					+" title=?, content=? "
 					+" WHERE num=?";
 			
@@ -303,7 +303,7 @@ public class BbsDAO {
 	public int delete(BbsDTO dto) {
 		int affected = 0;
 		try {
-			String query = "DELETE FROM board WHERE num=?";
+			String query = "DELETE FROM multi_board WHERE num=?";
 			
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, dto.getNum());

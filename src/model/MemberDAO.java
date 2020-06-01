@@ -211,20 +211,37 @@ public class MemberDAO {
 		return maps;
 	}*/
 	
-	public Set<String> idSearch(String email){
-		Set<String> set = new HashSet<String>();
+	public Map<String,String> idSearch(String email){
+		Map<String,String> maps = new HashMap<String,String>();
 		  try {
-			   String sql = "select id from membership where email=?";
+			   String sql = "SELECT id FROM membership WHERE email=?";
 			   psmt = con.prepareStatement(sql);
 			   psmt.setString(1, email);
 			   rs = psmt.executeQuery();
 			   if(rs.next()){
-				   set.add(rs.getString("id"));
+				   maps.put("id",rs.getString("id"));
 			   }
 		  }
 		  catch(Exception e){
 		   e.printStackTrace();
 		  }
-		  return set;
-		 }
+		  return maps;
+	}
+	
+	public Map<String,String> pwSearch(String id){
+		Map<String,String> maps = new HashMap<String,String>();
+		  try {
+			   String sql = "SELECT pass FROM membership WHERE id=?";
+			   psmt = con.prepareStatement(sql);
+			   psmt.setString(1, id);
+			   rs = psmt.executeQuery();
+			   if(rs.next()){
+				   maps.put("pass",rs.getString("pass"));
+			   }
+		  }
+		  catch(Exception e) {
+			  e.printStackTrace();
+		  }
+		  return maps;
+	}
 }

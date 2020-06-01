@@ -249,10 +249,10 @@
 <select name="last_email_check2" onChange="email_input(this);" class="pass" id="last_email_check2" >
 	<option selected="" value="">선택해주세요</option>
 	<option value="direct" >직접입력</option>
-	<option value="hanmail.net" >gmail.com</option>
+	<option value="gmail.com" >gmail.com</option>
 	<option value="nate.com" >nate.com</option>
 	<option value="naver.com" >naver.com</option>
-	<option value="yahoo.co.kr" >daum.com</option>
+	<option value="daum.net" >daum.net</option>
 </select>
 <input type="checkbox" name="open_email" value="1">
 <span>이메일 수신동의</span></td>
