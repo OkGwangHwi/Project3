@@ -24,10 +24,10 @@ case "freeboard":
 	boardTitle = "자유게시판";
 	break;
 case "photo":
-	boardTitle = "자주묻는질문";
+	boardTitle = "사진게시판";
 	break;
 case "info":
-	boardTitle = "자주묻는질문";
+	boardTitle = "정보자료실";
 	break;
 }
 %>

@@ -1,9 +1,9 @@
-<%@page import="java.util.Map"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.List"%>
-<%@page import="model.BbsDAO"%>
-<%@page import="model.BbsDTO"%>
 <%@page import="util.PagingUtil"%>
+<%@page import="model.BbsDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="model.BbsDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../include/global_head.jsp" %>
@@ -83,6 +83,7 @@ List<BbsDTO> bbs = dao.selectListPage(param);
 //DB자원해제
 dao.close();
 %>
+
  <body>
 	<center>
 	<div id="wrap">
@@ -92,16 +93,17 @@ dao.close();
 
 		<div class="contents_box">
 			<div class="left_contents">
+				
 				<%@ include file = "../include/space_leftmenu.jsp" %>
 			</div>
 			<div class="right_contents">
 				<div class="top_title">
-					<img src="../images/space/sub01_title.gif" alt="공지사항" class="con_title" />
-					<p class="location"><img src="../images/center/house.gif" />&nbsp;&nbsp;열린공간&nbsp;>&nbsp;공지사항<p>
+					<img src="../images/space/sub04_title.gif" alt="사진게시판" class="con_title" />
+					<p class="location"><img src="../images/center/house.gif" />&nbsp;&nbsp;열린공간&nbsp;>&nbsp;사진게시판<p>
 				</div>
-				<div>
-				
-<div class="row text-right" style="margin-bottom:20px;
+			</div>
+			
+			<div class="row text-right" style="margin-bottom:20px;
 		padding-right:50px;">
 <!-- 검색부분 -->
 <form class="form-inline">	
@@ -144,34 +146,73 @@ dao.close();
 		<th class="text-center">첨부</th>
 	</tr>
 	</thead>
-	
 	<tbody>
 	<!-- 리스트반복 -->
+	<%
+		//List컬렉션에 입력된 데이터가 없을때 true를 반환
+		if(bbs.isEmpty()){
+	%>
+		<tr>
+			<td colspan="6" align="center" height="100">
+				등록된 게시물이 없습니다.
+			</td>
+		</tr>
+	<%
+		}
+		else {
+			//게시물의 가상번호로 사용할 변수
+			int vNum = 0;
+			int countNum = 0;
+			/*
+			컬렉션에 입력된 데이터가 있다면 저장된 BbsDTO의 갯수만큼
+			즉, DB가 반환해준 레코드의 갯수만큼 반복하면서 출력한다.
+			*/
+			for(BbsDTO dto : bbs) {
+				vNum = totalRecordCount - (((nowPage-1) * pageSize) + countNum++);
+				/*
+				전체게시물수 : 107개
+				페이지사이즈 : 10
+				
+				현재페이지1
+					첫번째게시물 : 107 - (((1-1)*10)+0) = 107
+					두번째게시물 : 107 - (((1-1)*10)+1) = 106
+				현재페이지2
+					첫번째게시물 : 107 - (((2-1)*10)+0) = 97
+					두번째게시물 : 107 - (((2-1)*10)+1) = 96
+				*/
+	%>
 	<tr>
-		<td class="text-center">번호</td>
-		<td class="text-left"><a href="sub01_view.jsp">제목</a></td>
-		<td class="text-center">작성자</td>
-		<td class="text-center">작성일</td>
-		<td class="text-center">조회수</td>
+		<td class="text-center"><%=vNum %></td>
+		<td class="text-left"><a href="sub01_view.jsp"><%=dto.getTitle() %></a></td>
+		<td class="text-center"><%=dto.getId() %></td>
+		<td class="text-center"><%=dto.getPostDate() %></td>
+		<td class="text-center"><%=dto.getVisitcount() %></td>
 		<td class="text-center">첨부</td>
 	</tr>
+	<%
+			}
+		}
+	
+	%>
 	</tbody>
 	</table>
 </div>
-<div class="row text-right" style="padding-right:50px;">
+<div class="col text-right" style="padding-right:10px;">
+<% if(bname.equals("freeboard") || bname.equals("photo")){ %>
 	<!-- 각종 버튼 부분 -->
 	<!-- <button type="reset" class="btn">Reset</button> -->
 		
-	<button type="button" class="btn btn-default" 
-		onclick="location.href='sub01_write.jsp';">글쓰기</button>
+	<button type="button" class="btn btn-primary" 
+		onclick="location.href='sub04_write.jsp?bname=<%=bname %>';">글쓰기</button>
 				
 	<!-- <button type="button" class="btn btn-primary">수정하기</button>
 	<button type="button" class="btn btn-success">삭제하기</button>
 	<button type="button" class="btn btn-info">답글쓰기</button>
 	<button type="button" class="btn btn-warning">리스트보기</button>
 	<button type="submit" class="btn btn-danger">전송하기</button> -->
+<% } %>
 </div>
-<div class="row text-center">
+<div class="col text-center">
 	<!-- 페이지번호 부분 -->
 	<!-- <ul class="pagination">
 		<li><span class="glyphicon glyphicon-fast-backward"></span></li>
@@ -183,17 +224,13 @@ dao.close();
 		<li><span class="glyphicon glyphicon-fast-forward"></span></li>
 	</ul> -->
 	<ul class='pagination justify-content-center'>
-						<%=PagingUtil.pagingBS4(totalRecordCount,pageSize, blockPage, nowPage,"BoardList.jsp?"+queryStr) %>
+						<%=PagingUtil.pagingBS4(totalRecordCount,pageSize, blockPage, nowPage,"sub04.jsp?"+queryStr) %>
 					</ul>
 </div>
-
-				</div>
-			</div>
+			
 		</div>
 		<%@ include file="../include/quick.jsp" %>
 	</div>
-
-
 	<%@ include file="../include/footer.jsp" %>
 	</center>
  </body>

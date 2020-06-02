@@ -26,11 +26,7 @@ emailContent.put("content",map.get("id"));
 if(map.get("id")!=null){
 	boolean emailResult = smtp.emailSending(emailContent);
 	if(emailResult==true){
-		%>
-			<script>
-				alert("메일발송성공");
-			</script>
-		<%
+		out.println("회원님의 아이디는"+map.get("id")+" 입니다.");
 	}
 	else{
 		%>

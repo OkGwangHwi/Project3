@@ -1,13 +1,12 @@
-<%@page import="util.JavascriptUtil"%>
 <%@page import="util.PagingUtil"%>
 <%@page import="model.BbsDTO"%>
-<%@page import="model.BbsDAO"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
+<%@page import="model.BbsDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!-- 필수파라미터 체크로직 -->
+<%@ include file="../include/global_head.jsp" %>
 <%@ include file="../common/isFlag.jsp" %>
 <%
 //한글깨짐처리 - 검색폼에서 입력된 한글이 전송되기때문
@@ -80,89 +79,105 @@ param.put("end",end);
 //조건에 맞는 레코드를 select하여 결과셋을 List컬렉션으로 반환받음
 List<BbsDTO> bbs = dao.selectListPage(param);
 
-
 //DB자원해제
 dao.close();
 %>
 <!DOCTYPE html>
-<html lang="en">
-<jsp:include page="../common/boardHead.jsp" />
+<html>
+<head>
+<meta charset="UTF-8">
+<title>타이틀</title>
+<script src="../common/jquery/jquery-3.5.1.js"></script>
+<script>
+$(function(){
+	
+});
+</script>
+</head>
 <body>
-<div class="container">
-	<jsp:include page="../common/boardTop.jsp" />
-	<div class="row">		
-		<jsp:include page="../common/boardLeft.jsp" />
-		<div class="col-9 pt-3">
-			<h3><%=boardTitle %> - <small>이런저런 기능이 있는 게시판입니다.</small></h3>
-			
-			<div class="row">
-				<!-- 검색부분 -->
-				<form class="form-inline ml-auto" name="searchFrm" method="get">
-				
-				<!-- 검색시 필수파라미터인 bname이 전달되야 한다. -->	
-				<input type="hidden" name="bname" value="<%=bname %>" />
-					<div class="form-group">
-						<select name="searchColumn" class="form-control">
-							<option value="title">제목</option>
-							<option value="content">내용</option>
-						</select>
-					</div>
-					<div class="input-group">
-						<input type="text" name="searchWord"  class="form-control"/>
-						<div class="input-group-btn">
-							<button type="submit" class="btn btn-warning">
-								<i class='fa fa-search' style='font-size:20px'></i>
-							</button>
-						</div>
-					</div>
-				</form>	
+<center>
+	<div id="wrap">
+		<%@ include file="../include/top.jsp" %>
+
+		<img src="../images/space/sub_image.jpg" id="main_visual" />
+
+		<div class="contents_box">
+			<div class="left_contents">
+				<%@ include file = "../include/space_leftmenu.jsp" %>
 			</div>
-			<div class="row mt-3">
-				<!-- 게시판리스트부분 -->
-				<table class="table table-bordered table-hover table-striped">
-				<colgroup>
-					<col width="60px"/>
-					<col width="*"/>
-					<col width="120px"/>
-					<col width="120px"/>
-					<col width="80px"/>
-					<col width="60px"/>
-				</colgroup>				
-				<thead>
-				<tr style="background-color: rgb(133, 133, 133); " class="text-center text-white">
-					<th>번호</th>
-					<th>제목</th>
-					<th>작성자</th>
-					<th>작성일</th>
-					<th>조회수</th>
-					<!-- <th>첨부</th> -->
-				</tr>
-				</thead>				
-				<tbody>
-		<%
+			<div class="right_contents">
+			
+				<div class="top_title">
+					<img src="../images/space/<%=boardTitle %>.gif" alt="" class="con_title" />
+					<p class="location"><img src="../images/center/house.gif" />&nbsp;&nbsp;열린공간&nbsp;>&nbsp;<%=boardTitle %><p>
+				</div>
+			
+			<div class="row text-right" style="margin-bottom:20px;
+		padding-right:50px;">
+<!-- 검색부분 -->
+<form class="form-inline">	
+	<div class="form-group">
+		<select name="keyField" class="form-control">
+			<option value="">제목</option>
+			<option value="">작성자</option>
+			<option value="">내용</option>
+		</select>
+	</div>
+	<div class="input-group">
+		<input type="text" name="keyString"  class="form-control"/>
+		<div class="input-group-btn">
+			<button type="submit" class="btn btn-default">
+				<i class="glyphicon glyphicon-search"></i>
+			</button>
+		</div>
+	</div>
+</form>	
+</div>
+<div class="row">
+	<!-- 게시판리스트부분 -->
+	<table class="table table-bordered table-hover">
+	<colgroup>
+		<col width="80px"/>
+		<col width="*"/>
+		<col width="120px"/>
+		<col width="120px"/>
+		<col width="80px"/>
+		<col width="50px"/>
+	</colgroup>
+	
+	<thead>
+	<tr class="success">
+		<th class="text-center">번호</th>
+		<th class="text-left">제목</th>
+		<th class="text-center">작성자</th>
+		<th class="text-center">작성일</th>
+		<th class="text-center">조회수</th>
+		<th class="text-center">첨부</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- 리스트반복 -->
+	<%
 		//List컬렉션에 입력된 데이터가 없을때 true를 반환
 		if(bbs.isEmpty()){
-		%>
-				<tr>
-					<td colspan="6" align="center" height="100">
-						등록된 게시물이 없습니다.
-					</td>
-				</tr>
-		<%
+	%>
+		<tr>
+			<td colspan="6" align="center" height="100">
+				등록된 게시물이 없습니다.
+			</td>
+		</tr>
+	<%
 		}
-		else
-		{
+		else {
 			//게시물의 가상번호로 사용할 변수
 			int vNum = 0;
 			int countNum = 0;
-			
 			/*
 			컬렉션에 입력된 데이터가 있다면 저장된 BbsDTO의 갯수만큼
 			즉, DB가 반환해준 레코드의 갯수만큼 반복하면서 출력한다.
 			*/
-			for(BbsDTO dto : bbs){
-				vNum = totalRecordCount - 
-						(((nowPage-1) * pageSize) + countNum++);
+			for(BbsDTO dto : bbs) {
+				vNum = totalRecordCount - (((nowPage-1) * pageSize) + countNum++);
 				/*
 				전체게시물수 : 107개
 				페이지사이즈 : 10
@@ -174,54 +189,47 @@ dao.close();
 					첫번째게시물 : 107 - (((2-1)*10)+0) = 97
 					두번째게시물 : 107 - (((2-1)*10)+1) = 96
 				*/
-		%>
-				<!-- 리스트반복 start-->
-				<tr>
-					<td class="text-conter">
-						<%=vNum %>
-					</td>
-					<td class="text-left">
-						<a href="BoardView.jsp?num=<%=dto.getNum() %>
-						&nowPage=<%=nowPage%>&<%=queryStr%>">
-							<%=dto.getTitle() %>
-						</a>
-					</td>
-					<td><%=dto.getId() %></td>
-					<td><%=dto.getPostDate() %></td>
-					<td><%=dto.getVisitcount() %></td>
-<!-- 				<td class="text-center"><i class="material-icons" style="font-size:20px">attach_file</i></td> --></tr>
-				<!-- 리스트반복 end-->
-		<%
-			}//for-each문 끝
-		}//if문 끝
-		%>
-				</tbody>
-				</table>
-			</div>
-			<div class="row">
-				<div class="col text-right">
-				<% if(bname.equals("freeboard") || bname.equals("qna")){ %>
-					<!-- 각종 버튼 부분 -->
-					<!-- <button type="button" class="btn">Basic</button> -->
-					<button type="button" class="btn btn-primary" 
-						onclick="location.href='BoardWrite.jsp?bname=<%=bname%>';">글쓰기</button>
-				<% } %>
-				</div>
-			</div>
-			<div class="row mt-3">
-				<div class="col">
-					<!-- 페이지번호 부분 -->
-					<%-- <%=PagingUtil.pagingImg(totalRecordCount, 
-							pageSize, blockPage, nowPage, "BoardList.jsp?"+queryStr) %> --%>
-							
-					<ul class='pagination justify-content-center'>
-						<%=PagingUtil.pagingBS4(totalRecordCount,pageSize, blockPage, nowPage,"BoardList.jsp?"+queryStr) %>
-					</ul>
-				</div>				
-			</div>		
-		</div>
-	</div>
-	<jsp:include page="../common/boardBottom.jsp" />
+	%>
+	<tr>
+		<td class="text-center"><%=vNum %></td>
+		<td class="text-left"><a href="boardView.jsp?num=<%=dto.getNum() %>&bname=<%=bname %>&nowPage=<%=nowPage%>&<%=queryStr%>"><%=dto.getTitle() %></a></td>
+		<td class="text-center"><%=dto.getId() %></td>
+		<td class="text-center"><%=dto.getPostDate() %></td>
+		<td class="text-center"><%=dto.getVisitcount() %></td>
+		<td class="text-center">첨부</td>
+	</tr>
+	<%
+			}
+		}
+	%>
+	</tbody>
+	</table>
 </div>
+<div class="col text-right" style="padding-right:10px;">
+<% if(bname.equals("freeboard") || bname.equals("photo") || bname.equals("info")){ %>
+	<!-- 각종 버튼 부분 -->
+	<!-- <button type="reset" class="btn">Reset</button> -->
+		
+	<button type="button" class="btn btn-primary" 
+		onclick="location.href='boardWrite.jsp?bname=<%=bname %>';">글쓰기</button>
+				
+	<!-- <button type="button" class="btn btn-primary">수정하기</button>
+	<button type="button" class="btn btn-success">삭제하기</button>
+	<button type="button" class="btn btn-info">답글쓰기</button>
+	<button type="button" class="btn btn-warning">리스트보기</button>
+	<button type="submit" class="btn btn-danger">전송하기</button> -->
+<% } %>
+</div>
+<div class="col text-center">
+	<!-- 페이지번호 부분 -->
+	<ul class='pagination justify-content-center'>
+		<%=PagingUtil.pagingBS4(totalRecordCount,pageSize, blockPage, nowPage,"boardList.jsp?"+queryStr) %>
+	</ul>
+</div>
+	</div>
+	<%@ include file="../include/quick.jsp" %>
+</div>
+<%@ include file="../include/footer.jsp" %>
+</center>
 </body>
 </html>

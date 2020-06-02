@@ -16,6 +16,7 @@
 			alert("이메일을 입력하십시오");
 			return false;
 		}
+		window.open("idSearch.jsp?from="+frm.from.value+"&email="+frm.email.value+"&subject="+frm.subject.value,"아이디 찾기","width:10,height:10");
 	}
 
 	function pwCheck(frm) {
@@ -35,6 +36,8 @@
 			alert("이름을 입력하십시오");
 			return false;
 		}
+		
+		
 	}
 </script>
 
@@ -57,7 +60,7 @@
 						<img src="../images/center/house.gif" />&nbsp;&nbsp;멤버쉽&nbsp;>&nbsp;아이디/비밀번호찾기
 					<p>
 				</div>
-				<form method="post" action="idSearch.jsp" name="idsearchFrm"
+				<form method="post" action="#" name="idsearchFrm"
 					onsubmit="return check(this);">
 					<div class="idpw_box">
 						<div class="id_box">

@@ -1,14 +1,21 @@
+<%@page import="model.BbsDTO"%>
+<%@page import="model.BbsDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%-- 글작성 페이지 진입전 로그인 체크하기 --%>
+<%-- 글수정 페이지 진입전 로그인 체크하기 --%>
 <%@ include file="../common/isLogin.jsp" %>
-<%@ include file="../common/isFlag.jsp" %>
+
 <%
-//자유게시판, 질문과답변만 글쓰기 가능
-if(!(bname.equals("freeboard") || bname.equals("qna"))){
-	JavascriptUtil.jsAlertBack("해당 게시판은 글쓰기를 할 수 없습니다.",out);
-	return;
-}
+//폼값 받기 - 파라미터로 전달된 게시물의 일련번호
+String num = request.getParameter("num");
+BbsDAO dao = new BbsDAO(application);
+
+//게시물의 조회수 +1증가
+dao.updateVisitCount(num);
+
+BbsDTO dto = dao.selectView(num);
+
+dao.close();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +26,7 @@ if(!(bname.equals("freeboard") || bname.equals("qna"))){
 	<div class="row">		
 		<jsp:include page="../common/boardLeft.jsp" />
 		<div class="col-9 pt-3">
-			<h3>게시판 - <small>Write(작성)</small></h3>
+			<h3>게시판 - <small>Edit(수정)</small></h3>
 <script>
 //유기명함수
 function checkValidate(frm){
@@ -42,10 +49,16 @@ function checkValidate(frm){
 </script>			
 			<div class="row mt-3 mr-1">
 				<table class="table table-bordered table-striped">
-				<form name="writeFrm" method="post" action="WriteProc.jsp" 
+				<form name="writeFrm" method="post" action="EditProc.jsp" 
 				onsubmit="return checkValidate(this);">
-				<!-- 글작성시 게시판 구분을 위한 flag 추가 -->
-				<input type="hidden" name="bname" value="<%=bname %>" />
+				
+				<!-- 
+				해당 게시물의 일련번호를 전송해야 수정이 가능하다. 
+				hidden속성으로 처리하면 화면에서는 사라지지만 서버로는 값을
+				전송할 수 있다.
+				-->
+				<input type="hidden" name="num" value="<%=dto.getNum() %>"/>
+				
 				<colgroup>
 					<col width="20%"/>
 					<col width="*"/>
@@ -69,7 +82,8 @@ function checkValidate(frm){
 						<th class="text-center"
 							style="vertical-align:middle;">제목</th>
 						<td>
-							<input type="text" class="form-control" name="title" />
+							<input type="text" class="form-control" name="title" 
+							value="<%=dto.getTitle() %>" />
 						</td>
 					</tr>
 					<tr>
@@ -77,7 +91,7 @@ function checkValidate(frm){
 							style="vertical-align:middle;">내용</th>
 						<td>
 							<textarea rows="10" 
-								class="form-control" name="content" ></textarea>
+								class="form-control" name="content" ><%=dto.getContent() %></textarea>
 						</td>
 					</tr>
 					<!-- <tr>

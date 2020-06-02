@@ -248,24 +248,24 @@ public class BbsDAO {
 	public BbsDTO selectView(String num) {
 		BbsDTO dto = new BbsDTO();
 		//기존쿼리문 : member테이블과 join없을때...
-		/*String query = "SELECT * FROM board WHERE num=?";*/
+		String query = "SELECT * FROM multi_board WHERE num=?";
 		
 		//변경된쿼리문 : member테이블과 join하여 사용자 이름 가져옴.
-		String query = "SELECT B.*,M.name " +
+		/*String query = "SELECT B.*,M.name " +
 				" FROM membership M INNER JOIN multi_board B " + 
 				"    ON M.id=B.id " + 
-				" WHERE num=?";
+				" WHERE num=?";*/
 		try {
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, num);
 			rs = psmt.executeQuery();
 			if(rs.next()) {
-				dto.setNum(rs.getString(1));
-				dto.setTitle(rs.getString(2));
+				dto.setNum(rs.getString("num"));
+				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setPostDate(rs.getDate("postdate"));
 				dto.setId(rs.getString("id"));
-				dto.setVisitcount(rs.getString(6));
+				dto.setVisitcount(rs.getString("visitcount"));
 				//테이블join으로 컬럼추가
 				dto.setName(rs.getString("name"));
 			}
