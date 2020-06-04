@@ -144,6 +144,40 @@ public class MemberDAO {
 		return maps;
 	}
 	
+	public Map<String, String> adminLogin(String id,String pwd){
+		Map<String, String> maps = new HashMap<String, String>();
+		
+		String sql = "SELECT id,pass,name FROM membership "
+				+ " WHERE id=? AND pass=? AND grade=10 ";
+		try {
+			//prepared 객체 생성
+			psmt = con.prepareStatement(sql);
+			//쿼리문의 인파라미터 설정
+			psmt.setString(1, id);
+			psmt.setString(2, pwd);
+			//오라클로 쿼리문 전송 및 결과셋(ResultSet) 반환받음
+			rs = psmt.executeQuery();
+			//오라클이 반환해준 ResultSet이 있는지 확인
+			if(rs.next()) {
+				//true를 반환했다면 결과셋 있음
+				//DTO객체에 회원 레코드의 값을 저장한다.
+				maps.put("name",rs.getString("name"));
+				maps.put("id",rs.getString("id"));
+				maps.put("pass",rs.getString("pass"));
+			}
+			else {
+				//false를 반환했다면 결과셋 없음
+				System.out.println("결과셋이 없습니다.");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("adminLogin 오류");
+			e.printStackTrace();
+		}
+		//DTO객체를 반환한다.
+		return maps;
+	}
+	
 	public int joinMember(MemberDTO dto) {
 		
 		int affected = 0;

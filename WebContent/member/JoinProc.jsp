@@ -42,7 +42,7 @@ String address = request.getParameter("address");
 String detailAddress = request.getParameter("detailAddress");
 String extraAddress = request.getParameter("extraAddress");
 String addr = zip1+" "+address+" "+detailAddress+" "+extraAddress;
-
+String grade = request.getParameter("grade");
 
 MemberDTO dto = new MemberDTO();
 dto.setName(name);

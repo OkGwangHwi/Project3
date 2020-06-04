@@ -14,59 +14,99 @@ public class MemberDTO {
 	private String mob;
 	private String email;
 	private String addr;
+	private String grade;
 
 	public String getName() {
 		return name;
 	}
 
+
+
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+
 
 	public String getId() {
 		return id;
 	}
 
+
+
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
+
+
 
 	public String getPass1() {
 		return pass1;
 	}
 
+
+
+
 	public void setPass1(String pass1) {
 		this.pass1 = pass1;
 	}
+
+
+
 
 	public String getTel() {
 		return tel;
 	}
 
+
+
+
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
+
+
+
 
 	public String getMob() {
 		return mob;
 	}
 
+
+
+
 	public void setMob(String mob) {
 		this.mob = mob;
 	}
+
+
+
 
 	public String getEmail() {
 		return email;
 	}
 
+
+
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+
+
+
 	public String getAddr() {
 		return addr;
 	}
-	
+
+
+
+
 	public void setAddr(String addr) {
 		this.addr = addr;
 	}
@@ -76,7 +116,6 @@ public class MemberDTO {
 	반환해주는 역할을 한다. toString()메소드를 오버라이딩하면
 	객체 자체를 그대로 println()하는것이 가능하다.
 	 */
-	
 	@Override
 	public String toString() {
 		return String.format("아이디:%s, 비밀번호:%s, 이름:%s",id,pass1,name);
