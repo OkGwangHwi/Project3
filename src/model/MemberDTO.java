@@ -15,6 +15,22 @@ public class MemberDTO {
 	private String email;
 	private String addr;
 	private String grade;
+	
+	
+
+	public String getGrade() {
+		return grade;
+	}
+
+
+
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+
+
 
 	public String getName() {
 		return name;

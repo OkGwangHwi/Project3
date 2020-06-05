@@ -1,3 +1,7 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="model.MyfileDAO"%>
+<%@page import="model.MyfileDTO"%>
+<%@page import="java.io.File"%>
 <%@page import="util.PagingUtil"%>
 <%@page import="model.BbsDTO"%>
 <%@page import="java.util.List"%>
@@ -6,6 +10,7 @@
 <%@page import="model.BbsDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/global_head.jsp" %>
 <%@ include file="../common/isFlag.jsp" %>
 <%
@@ -79,6 +84,14 @@ param.put("end",end);
 //조건에 맞는 레코드를 select하여 결과셋을 List컬렉션으로 반환받음
 List<BbsDTO> bbs = dao.selectListPage(param);
 
+//업로드 폴더의 물리적 경로 가져오기
+String saveDirectory = application.getRealPath("/Upload");
+//경로를 기반으로 File객체 생성
+File file = new File(saveDirectory);
+
+//listFiles()메소드를 통해 파일목록 얻어오기
+File[] fileList = file.listFiles();
+
 //DB자원해제
 dao.close();
 %>
@@ -137,22 +150,33 @@ $(function(){
 	<!-- 게시판리스트부분 -->
 	<table class="table table-bordered table-hover">
 	<colgroup>
+		<% if(!(bname.equals("photo"))){ %>
 		<col width="80px"/>
 		<col width="*"/>
 		<col width="120px"/>
 		<col width="120px"/>
 		<col width="80px"/>
 		<col width="50px"/>
+		<% }else{ %>
+		<col width="25%"/>
+		<col width="25%"/>
+		<col width="25%"/>
+		<col width="25%"/>
+		<% } %>
 	</colgroup>
 	
 	<thead>
 	<tr class="success">
+	<% if(!(bname.equals("photo"))){ %>
 		<th class="text-center">번호</th>
 		<th class="text-left">제목</th>
 		<th class="text-center">작성자</th>
 		<th class="text-center">작성일</th>
 		<th class="text-center">조회수</th>
+		<%if(bname.equals("info")){ %>
 		<th class="text-center">첨부</th>
+		<%} %>
+	<% } %>
 	</tr>
 	</thead>
 	<tbody>
@@ -168,7 +192,7 @@ $(function(){
 		</tr>
 	<%
 		}
-		else {
+		else if(!(bname.equals("photo"))){
 			//게시물의 가상번호로 사용할 변수
 			int vNum = 0;
 			int countNum = 0;
@@ -190,23 +214,50 @@ $(function(){
 					두번째게시물 : 107 - (((2-1)*10)+1) = 96
 				*/
 	%>
+	<%-- <%
+	MyfileDTO f = new MyfileDTO();
+	MyfileDAO fdao = new MyfileDAO();
+	List<MyfileDTO>fileLists = fdao.myFileList();
+	//out.print(fileList.size());
+	%> --%>
 	<tr>
 		<td class="text-center"><%=vNum %></td>
 		<td class="text-left"><a href="boardView.jsp?num=<%=dto.getNum() %>&bname=<%=bname %>&nowPage=<%=nowPage%>&<%=queryStr%>"><%=dto.getTitle() %></a></td>
 		<td class="text-center"><%=dto.getId() %></td>
 		<td class="text-center"><%=dto.getPostDate() %></td>
 		<td class="text-center"><%=dto.getVisitcount() %></td>
-		<td class="text-center">첨부</td>
+		<%if(bname.equals("info")){ %>
+		<td class="text-center"><%-- <a 
+			href="Download2.jsp?oName=<%=URLEncoder.encode(f.getOfile()
+					,"UTF-8")%>&sName=<%=URLEncoder.encode(f.getSfile(),"UTF-8")%>"><img src="../images/disk.png" width="20" alt="" /></a> --%></td>
+		<%} %>
 	</tr>
 	<%
 			}
 		}
+		else if(bname.equals("photo")){
 	%>
+	<tr>
+		<td>
+			<input type="image" src="../images/1.jpg" width="200px" height="150px" onclick="location.href='http://www.daum.net'" />
+			
+		</td>
+		<td><image src="../images/2.jpg" width="200px" height="150px"></image></td>
+		<td><image src="../images/3.jpg" width="200px" height="150px"></image></td>
+		<td><image src="../images/4.jpg" width="200px" height="150px"></image></td>
+	</tr>
+	<tr>
+		<td><image src="../images/1.jpg" width="200px" height="150px"></image></td>
+		<td><image src="../images/2.jpg" width="200px" height="150px"></image></td>
+		<td><image src="../images/3.jpg" width="200px" height="150px"></image></td>
+		<td><image src="../images/4.jpg" width="200px" height="150px"></image></td>
+	</tr>
+	<% } %>
 	</tbody>
 	</table>
 </div>
 <div class="col text-right" style="padding-right:10px;">
-<% if(bname.equals("freeboard") || bname.equals("photo") || bname.equals("info")){ %>
+<% if(bname.equals("freeboard") || bname.equals("photo") || bname.equals("info")) {%>
 	<!-- 각종 버튼 부분 -->
 	<!-- <button type="reset" class="btn">Reset</button> -->
 		

@@ -24,17 +24,17 @@
     <div class="card card-login mx-auto mt-5">
       <div class="card-header">Login</div>
       <div class="card-body">
-        <form action="adminLogin.jsp" onsubmit="return check(this);" >
+        <form action="adminLogin.jsp" method="post" >
           <div class="form-group">
             <div class="form-label-group">
-              <input type="text" id="id" name="id" class="form-control" placeholder="Email address" required="required" autofocus="autofocus">
-              <label for="inputEmail">ID</label>
+              <input type="text" id="id" name="id" class="form-control" placeholder="Email address" autofocus="autofocus">
+              <!-- <label for="inputEmail">ID</label> -->
             </div>
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" required="required">
-              <label for="inputPassword">Password</label>
+              <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" >
+              <!-- <label for="inputPassword">Password</label> -->
             </div>
           </div>
           <div class="form-group">

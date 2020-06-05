@@ -46,7 +46,7 @@ else{
 	request.setAttribute("ERROR_MSG", "넌 회원이 아니시군-_-;");
 	request.getRequestDispatcher("Login.jsp").forward(request,response);
 } */
-
+ 
 //방법3 : Map 컬렉션에 회원정보 저장후 반환받기
 Map<String, String> adminInfo = dao.adminLogin(id, pw);
 //Map의 id키값에 저장된 값이 있는지 확인
@@ -55,20 +55,13 @@ if(adminInfo.get("id")!=null){
 	session.setAttribute("id", adminInfo.get("id"));
 	session.setAttribute("pass", adminInfo.get("pass"));
 	session.setAttribute("name", adminInfo.get("name"));
-%>
-<script>
-	alert("접속하셨습니다.");
-</script>
-<%
-	response.sendRedirect("index.html");
+	session.setAttribute("grade", adminInfo.get("grade"));
+
+	response.sendRedirect("index.jsp");
 }
 else{
 	//저장된 값이 없다면...리퀘스트 영역에 오류메세지를 저장하고 포워드한다. 
-%>
-<script>
-	alert("접속실패하였습니다.");
-</script>
-<%
+
 	request.setAttribute("ERROR_MSG", "넌 회원이 아니시군-_-;");
 	request.getRequestDispatcher("login.html").forward(request,response);
 }

@@ -6,22 +6,6 @@
 <%-- <%@ include file="../common/isLogin.jsp" %>
 <%@ include file="../common/isFlag.jsp" %> --%>
 <%
-/* request.setCharacterEncoding("UTF-8");
-out.print("잘나오나....: "+request.getParameter("name"));
-out.print("잘나오나....: "+request.getParameter("id"));
-out.print("잘나오나....: "+request.getParameter("pass1"));
-out.print("잘나오나....: "+request.getParameter("tel1"));
-out.print("잘나오나....: "+request.getParameter("tel2"));
-out.print("잘나오나....: "+request.getParameter("tel3"));
-out.print("잘나오나....: "+request.getParameter("mobile1"));
-out.print("잘나오나....: "+request.getParameter("mobile2"));
-out.print("잘나오나....: "+request.getParameter("mobile3"));
-out.print("잘나오나....: "+request.getParameter("email1"));
-out.print("잘나오나....: "+request.getParameter("email2"));
-out.print("잘나오나....: "+request.getParameter("zip1")); */
-
-
-
 //폼값전송받기
 String name = request.getParameter("name"); 
 String id = request.getParameter("id"); 
@@ -52,6 +36,7 @@ dto.setTel(tel);
 dto.setMob(mob);
 dto.setEmail(email);
 dto.setAddr(addr);
+dto.setGrade(grade);
 
 MemberDAO dao = new MemberDAO(application);
 
@@ -62,7 +47,7 @@ if(affected == 1){
 	alert("회원가입 성공");
 </script>
 <%
-	response.sendRedirect("../main/main.jsp");
+	response.sendRedirect("../main/main.do");
 }
 else{
 %>

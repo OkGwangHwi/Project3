@@ -211,7 +211,7 @@
 	<tr>
 		<th><img src="../images/join_tit001.gif" /></th>
 		<td><input type="text" name="name" value="" class="join_input" /></td>
-		<!-- <input type="hidden" name="grade" value="10" /> -->
+		<input type="hidden" name="grade" value="1" />
 	</tr>
 	<tr>
 		<th><img src="../images/join_tit002.gif" /></th>

@@ -55,20 +55,13 @@ if(memberInfo.get("id")!=null){
 	session.setAttribute("id", memberInfo.get("id"));
 	session.setAttribute("pass", memberInfo.get("pass"));
 	session.setAttribute("name", memberInfo.get("name"));
-%>
-<script>
-	alert("접속하셨습니다.");
-</script>
-<%
+	session.setAttribute("grade", memberInfo.get("grade"));
+
 	response.sendRedirect("../main/main.jsp");
 }
 else{
 	//저장된 값이 없다면...리퀘스트 영역에 오류메세지를 저장하고 포워드한다. 
-%>
-<script>
-	alert("접속실패하였습니다.");
-</script>
-<%
+
 	request.setAttribute("ERROR_MSG", "넌 회원이 아니시군-_-;");
 	request.getRequestDispatcher("login.jsp").forward(request,response);
 }

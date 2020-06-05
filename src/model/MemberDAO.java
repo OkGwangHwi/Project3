@@ -113,7 +113,7 @@ public class MemberDAO {
 	public Map<String, String> getMemberMap(String id,String pwd){
 		Map<String, String> maps = new HashMap<String, String>();
 		
-		String sql = "SELECT id,pass,name FROM membership "
+		String sql = "SELECT id,pass,name,grade FROM membership "
 				+ " WHERE id=? AND pass=?";
 		try {
 			//prepared 객체 생성
@@ -130,6 +130,7 @@ public class MemberDAO {
 				maps.put("name",rs.getString("name"));
 				maps.put("id",rs.getString("id"));
 				maps.put("pass",rs.getString("pass"));
+				maps.put("grade",rs.getString("grade"));
 			}
 			else {
 				//false를 반환했다면 결과셋 없음
@@ -144,11 +145,13 @@ public class MemberDAO {
 		return maps;
 	}
 	
-	public Map<String, String> adminLogin(String id,String pwd){
+	 
+	public Map<String, String> adminLogin(String id, String pwd){
+		
 		Map<String, String> maps = new HashMap<String, String>();
 		
-		String sql = "SELECT id,pass,name FROM membership "
-				+ " WHERE id=? AND pass=? AND grade=10 ";
+		String sql = "SELECT id,pass,name,grade FROM membership "
+				+ " WHERE id=? AND pass=? and grade=10";
 		try {
 			//prepared 객체 생성
 			psmt = con.prepareStatement(sql);
@@ -164,6 +167,7 @@ public class MemberDAO {
 				maps.put("name",rs.getString("name"));
 				maps.put("id",rs.getString("id"));
 				maps.put("pass",rs.getString("pass"));
+				maps.put("grade",rs.getString("grade"));
 			}
 			else {
 				//false를 반환했다면 결과셋 없음
@@ -171,17 +175,17 @@ public class MemberDAO {
 			}
 		}
 		catch (Exception e) {
-			System.out.println("adminLogin 오류");
+			System.out.println("getMemberDTO오류");
 			e.printStackTrace();
 		}
-		//DTO객체를 반환한다.
+		
 		return maps;
 	}
 	
 	public int joinMember(MemberDTO dto) {
 		
 		int affected = 0;
-		try {
+		try { 
 			/*
 			  Oracle에서는 시퀀스를 사용해서 일련번호를 입력하지만
 			  MariaDB에서는 auto_increment제약조건으로 컬럼 자체를
@@ -189,9 +193,9 @@ public class MemberDAO {
 			  입력하는것보다 쿼리에서 제외시켜 주는것이 좋다.
 			 */
 			String query = "INSERT INTO membership ( "
-					+ " name,id,pass,tel,mob,email,addr) "
+					+ " name,id,pass,tel,mob,email,addr,grade) "
 					+ " VALUES ( "
-					+ " ?, ?, ?, ?, ?, ?, ?)";
+					+ " ?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, dto.getName());
@@ -201,6 +205,7 @@ public class MemberDAO {
 			psmt.setString(5, dto.getMob());
 			psmt.setString(6, dto.getEmail());
 			psmt.setString(7, dto.getAddr());
+			psmt.setString(8, dto.getGrade());
 			
 			affected = psmt.executeUpdate();
 		}
@@ -277,5 +282,39 @@ public class MemberDAO {
 			  e.printStackTrace();
 		  }
 		  return maps;
+	}
+	
+	public void upGrade(String id) {
+		String query = "UPDATE membership SET "
+				+ " grade = grade + 9 "
+				+ " WHERE id=? ";
+		
+		System.out.println("등급업:"+query);
+		try {
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, id);
+			psmt.executeQuery();
+		}
+		catch(Exception e) {
+			System.out.println("Update 예외발생");
+			e.printStackTrace();
+		}
+	}
+	
+	public void downGrade(String id) {
+		String query = "UPDATE membership SET "
+				+ " grade = grade - 9 "
+				+ " WHERE id=? ";
+		
+		System.out.println("등급다운:"+query);
+		try {
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, id);
+			psmt.executeQuery();
+		}
+		catch(Exception e) {
+			System.out.println("Update 예외발생");
+			e.printStackTrace();
+		}
 	}
 }
